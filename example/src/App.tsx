@@ -27,7 +27,7 @@ import {
   recoverPublicKey,
   recoverPersonalSignature,
   formatTestTransaction,
-  getChainData
+  getChainData,
 } from "./helpers/utilities";
 import { IAssetData } from "./helpers/types";
 import { fonts } from "./styles";
@@ -36,7 +36,7 @@ import {
   ETH_SIGN,
   PERSONAL_SIGN,
   DAI_BALANCE_OF,
-  DAI_TRANSFER
+  DAI_TRANSFER,
 } from "./constants";
 import { callBalanceOf, callTransfer } from "./helpers/web3";
 
@@ -133,7 +133,7 @@ const INITIAL_STATE: IAppState = {
   assets: [],
   showModal: false,
   pendingRequest: false,
-  result: null
+  result: null,
 };
 
 function initWeb3(provider: any) {
@@ -144,9 +144,9 @@ function initWeb3(provider: any) {
       {
         name: "chainId",
         call: "eth_chainId",
-        outputFormatter: web3.utils.hexToNumber
-      }
-    ]
+        outputFormatter: web3.utils.hexToNumber,
+      },
+    ],
   });
 
   return web3;
@@ -160,13 +160,13 @@ class App extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      ...INITIAL_STATE
+      ...INITIAL_STATE,
     };
 
     this.web3Modal = new Web3Modal({
       network: this.getNetwork(),
       cacheProvider: true,
-      providerOptions: this.getProviderOptions()
+      providerOptions: this.getProviderOptions(),
     });
   }
 
@@ -198,7 +198,7 @@ class App extends React.Component<any, any> {
       connected: true,
       address,
       chainId,
-      networkId
+      networkId,
     });
     await this.getAccountAssets();
   };
@@ -207,7 +207,7 @@ class App extends React.Component<any, any> {
     if (!provider.on) {
       return;
     }
-    provider.on("close", () => this.resetApp());
+    provider.on("disconnect", () => this.resetApp());
     provider.on("accountsChanged", async (accounts: string[]) => {
       await this.setState({ address: accounts[0] });
       await this.getAccountAssets();
@@ -235,22 +235,22 @@ class App extends React.Component<any, any> {
       walletconnect: {
         package: WalletConnect,
         options: {
-          infuraId
-        }
+          infuraId,
+        },
       },
       coinbasewallet: {
         package: CoinbaseWalletSDK,
         options: {
           appName: "Web3Modal Example App",
-          infuraId
-        }
+          infuraId,
+        },
       },
       web3auth: {
         package: Web3Auth,
         options: {
-          infuraId
-        }
-      }
+          infuraId,
+        },
+      },
     };
     return providerOptions;
   };
@@ -307,14 +307,14 @@ class App extends React.Component<any, any> {
         txHash: result,
         from: address,
         to: address,
-        value: "0 ETH"
+        value: "0 ETH",
       };
 
       // display result
       this.setState({
         web3,
         pendingRequest: false,
-        result: formattedResult || null
+        result: formattedResult || null,
       });
     } catch (error) {
       console.error(error); // tslint:disable-line
@@ -355,14 +355,14 @@ class App extends React.Component<any, any> {
         address,
         signer,
         verified,
-        result
+        result,
       };
 
       // display result
       this.setState({
         web3,
         pendingRequest: false,
-        result: formattedResult || null
+        result: formattedResult || null,
       });
     } catch (error) {
       console.error(error); // tslint:disable-line
@@ -403,14 +403,14 @@ class App extends React.Component<any, any> {
         address,
         signer,
         verified,
-        result
+        result,
       };
 
       // display result
       this.setState({
         web3,
         pendingRequest: false,
-        result: formattedResult || null
+        result: formattedResult || null,
       });
     } catch (error) {
       console.error(error); // tslint:disable-line
@@ -452,14 +452,14 @@ class App extends React.Component<any, any> {
       // format displayed result
       const formattedResult = {
         action: functionSig,
-        result
+        result,
       };
 
       // display result
       this.setState({
         web3,
         pendingRequest: false,
-        result: formattedResult || null
+        result: formattedResult || null,
       });
     } catch (error) {
       console.error(error); // tslint:disable-line
@@ -469,8 +469,8 @@ class App extends React.Component<any, any> {
 
   public resetApp = async () => {
     const { web3 } = this.state;
-    if (web3 && web3.currentProvider && web3.currentProvider.close) {
-      await web3.currentProvider.close();
+    if (web3 && web3.currentProvider && web3.currentProvider.disconnect) {
+      await web3.currentProvider.disconnect();
     }
     await this.web3Modal.clearCachedProvider();
     this.setState({ ...INITIAL_STATE });
@@ -485,7 +485,7 @@ class App extends React.Component<any, any> {
       fetching,
       showModal,
       pendingRequest,
-      result
+      result,
     } = this.state;
     return (
       <SLayout>
